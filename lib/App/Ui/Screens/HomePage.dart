@@ -294,32 +294,71 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: 10,
             ),
-            DatePicker(
-              selected: selected,
-              onChanged: (time) => setState(() => selected = time),
-              showYear: true,
-            ),
           ],
         ),
         actions: [
           Button(
             child: const Text('Cancel'),
             onPressed: () {
-              Navigator.pop(context, 'User deleted file');
+              Navigator.pop(context, 'Cancel Wallet Creation');
               // Delete file here
             },
           ),
           FilledButton(
             child: const Text('Create'),
             onPressed: () => {
-              walletCardController.addCard(
-                _walletNamecontroller.text,
-                DateTime(DateTime.now().day, DateTime.now().month,
-                    DateTime.now().year,DateTime.now().hour,DateTime.now().minute),
-                _walletAmountcontroller.text,
-                _walletGoalcontroller.text,
-              ),
-              Navigator.pop(context, 'Wallet Created'),
+              if (_walletNamecontroller.text.isNotEmpty &&
+                  _walletGoalcontroller.text.isNotEmpty &&
+                  _walletAmountcontroller.text.isNotEmpty)
+                {
+                  walletCardController.addCard(
+                    _walletNamecontroller.text,
+                    DateTime(
+                        DateTime.now().day,
+                        DateTime.now().month,
+                        DateTime.now().year,
+                        DateTime.now().hour,
+                        DateTime.now().minute),
+                    _walletAmountcontroller.text,
+                    _walletGoalcontroller.text,
+                  ),
+                  Navigator.pop(context, 'Wallet Created'),
+
+                  displayInfoBar(context, builder: (context, close) {
+                    return InfoBar(
+                      isLong: true,
+                      title:  const Text(' Congratulations Your Wallet Has been Created'),
+                      content:
+                      const Text('Now You can Manage Your Wallet And fill your Gaol.'),
+                      action: IconButton(
+                        icon: const Icon(FluentIcons.clear),
+                        onPressed: close,
+                      ),
+                      severity: InfoBarSeverity.success,
+                    );
+                  }),
+                }
+
+              else
+                {
+                  displayInfoBar(context, builder: (context, close) {
+                    return InfoBar(
+                      isLong: true,
+                      title:  const Text(' Please Fill All The Field'),
+                      content:
+                      const Text('You have to fill all the field to create a wallet.'),
+                      action: IconButton(
+                        icon: const Icon(FluentIcons.clear),
+                        onPressed: close,
+                      ),
+                      severity: InfoBarSeverity.warning,
+                    );
+                  }),
+                }
+
+
+
+
             },
           ),
         ],
