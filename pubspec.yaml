@@ -35,6 +35,7 @@ dependencies:
   get: ^4.6.6
   syncfusion_flutter_charts: ^23.1.42
   percent_indicator: ^4.2.3
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

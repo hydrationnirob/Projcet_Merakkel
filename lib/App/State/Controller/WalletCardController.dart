@@ -7,17 +7,27 @@ class WalletCardController extends GetxController {
   final RxBool isCardAdded = true.obs;
 
   final _walletCards = <Widget>[
-    const WalletCard(),
+     WalletCard(
+      title: 'Food',
+      lastPaid: DateTime(2021, 10, 10),
+      amount: '200',
+      tagetAmount: '500',
+    ),
   ].obs;
 
   List<Widget> get walletCards => _walletCards;
 
-  void addCard() {
+  void addCard(title, lastPaid, amount, tagetAmount) {
     if (_walletCards.length == 4) {
       isCardAdded.value = false;
     }
 
-    _walletCards.add(const WalletCard());
+    _walletCards.add( WalletCard(
+      title: title,
+      lastPaid: lastPaid,
+      amount: amount,
+      tagetAmount: tagetAmount,
+    ));
   }
 }
 
