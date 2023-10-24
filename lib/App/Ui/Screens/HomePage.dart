@@ -300,7 +300,17 @@ class _HomePageState extends State<HomePage> {
           Button(
             child: const Text('Cancel'),
             onPressed: () {
-              Navigator.pop(context, 'Cancel Wallet Creation');
+              Navigator.pop(context,);
+              displayInfoBar(context, builder: (context, close) {
+                return const InfoBar(
+                  isLong: true,
+                  title:  Text(' Wallet Not Created'),
+                  content:
+                  Text('You can create a wallet later.'),
+                  severity: InfoBarSeverity.warning,
+                );
+
+               });
               // Delete file here
             },
           ),
@@ -325,15 +335,11 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pop(context, 'Wallet Created'),
 
                   displayInfoBar(context, builder: (context, close) {
-                    return InfoBar(
+                    return const InfoBar(
                       isLong: true,
-                      title:  const Text(' Congratulations Your Wallet Has been Created'),
+                      title:  Text(' Congratulations Your Wallet Has been Created'),
                       content:
-                      const Text('Now You can Manage Your Wallet And fill your Gaol.'),
-                      action: IconButton(
-                        icon: const Icon(FluentIcons.clear),
-                        onPressed: close,
-                      ),
+                      Text('Now You can Manage Your Wallet And fill your Gaol.'),
                       severity: InfoBarSeverity.success,
                     );
                   }),
@@ -341,16 +347,14 @@ class _HomePageState extends State<HomePage> {
 
               else
                 {
+
+
                   displayInfoBar(context, builder: (context, close) {
-                    return InfoBar(
+                    return const InfoBar(
                       isLong: true,
-                      title:  const Text(' Please Fill All The Field'),
+                      title:  Text(' Please Fill All The Field'),
                       content:
-                      const Text('You have to fill all the field to create a wallet.'),
-                      action: IconButton(
-                        icon: const Icon(FluentIcons.clear),
-                        onPressed: close,
-                      ),
+                      Text('You have to fill all the field to create a wallet.'),
                       severity: InfoBarSeverity.warning,
                     );
                   }),
