@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   fluent_ui: ^4.7.6
+  get: ^4.6.6
+  syncfusion_flutter_charts: ^23.1.42
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
