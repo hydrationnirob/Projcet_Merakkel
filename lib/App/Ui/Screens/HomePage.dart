@@ -1,8 +1,13 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:isar/isar.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:projcet_merakkel/App/Data/UserData/Local_db/local_db.dart';
+import 'package:projcet_merakkel/App/Models/WalletModel.dart';
 import 'package:projcet_merakkel/App/State/Controller/WalletCardController.dart';
 import 'package:projcet_merakkel/App/Ui/Utilities/Colors.dart';
 import 'package:projcet_merakkel/App/Ui/Widgets/WalletCard.dart';
@@ -19,9 +24,31 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _walletGoalcontroller = TextEditingController();
   final TextEditingController _walletAmountcontroller = TextEditingController();
 
+   int TempTotalAmount = 0;
+
+
+void saveData(title,lastPaid,amount,tagetAmount,totalAmount) async {
+
+
+  final walletModel = WalletModel(
+    id: Isar.autoIncrement,
+    Title: title,
+    LastPaid: lastPaid,
+    Amount: amount,
+    TagetAmount: tagetAmount,
+    TotalAmount: totalAmount,
+
+  );
+  await localdb.SaveWallet(walletModel);
+}
+
+
+
+
+  final localdb= LocalDbServices();
+
   DateTime? selected;
-  final WalletCardController walletCardController =
-      Get.put(WalletCardController());
+  final WalletCardController walletCardController = Get.put(WalletCardController());
 
   @override
   Widget build(BuildContext context) {
@@ -55,31 +82,48 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HeroCard(),
-          Obx(
-            () => SizedBox(
-              height: 200,
-              //width: MediaQuery.of(context).size.width*0.4,
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return walletCardController.walletCards[index];
-                },
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  top: 10,
-                ),
-                itemCount: walletCardController.walletCards.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(
-                    width: 10,
-                  );
-                },
-              ),
+           StreamBuilder<List<WalletModel>>(
+              stream: LocalDbServices().getWallets(),
+              builder: (context, snapshot) {
+                if (snapshot.data==null)
+                  {
+                    return const Center(child: Text('No Wallet Created Yet'),);
+                  }
+                final Wallet = snapshot.data;
+
+                return SizedBox(
+                  height: 200,
+                  //width: MediaQuery.of(context).size.width*0.4,
+                  child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      return WalletCard(
+                        title: Wallet[index].Title,
+                        lastPaid: Wallet[index].LastPaid,
+                        amount: Wallet[index].Amount,
+                        tagetAmount: Wallet[index].TagetAmount,
+                      );
+
+                    },
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 10,
+                    ),
+                    itemCount: Wallet!.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const SizedBox(
+                        width: 10,
+                      );
+                    },
+                  ),
+                );
+              }
+
             ),
-          ),
+
           const Spacer(),
           SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -139,50 +183,53 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16, top: 5),
-                      child: Text("Hello, Nirob!",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ),
-                  ),
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16, top: 5),
-                      child: Text(
-                        'Total Balance',
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16, top: 5),
+                    child: Text("Hello, Nirob!",
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, top: 8),
-                      child: Text(
-                        'Tk.1.410.985',
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: AppColors.primaryColor,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
-                        ),
+                        )),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16, top: 5),
+                    child: Text(
+                      'Total Balance',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
-                  const Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 16, top: 8),
-                      child: Text(
-                        'This month',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
+                  StreamBuilder<List<WalletModel>>(
+                    stream: LocalDbServices().getWallets(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data==null)
+                      {
+                        return const Center(child: Text('No Balance'),);
+                      }
+
+                      final Wallet = snapshot.data;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 8),
+                        child: Text( Wallet!.fold(0, (previousValue, element) => previousValue + element.TotalAmount).toString(),
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      );
+                    }
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16, top: 8),
+                    child: Text(
+                      'This month',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
                       ),
                     ),
                   ),
@@ -287,19 +334,15 @@ class _HomePageState extends State<HomePage> {
               controller: _walletAmountcontroller,
               placeholder: '5000',
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Text(' Set your Target Date'),
-            const SizedBox(
-              height: 10,
-            ),
           ],
         ),
         actions: [
           Button(
             child: const Text('Cancel'),
             onPressed: () {
+              _walletNamecontroller.clear();
+              _walletGoalcontroller.clear();
+              _walletAmountcontroller.clear();
               Navigator.pop(context,);
               displayInfoBar(context, builder: (context, close) {
                 return const InfoBar(
@@ -321,18 +364,24 @@ class _HomePageState extends State<HomePage> {
                   _walletGoalcontroller.text.isNotEmpty &&
                   _walletAmountcontroller.text.isNotEmpty)
                 {
+
+                  TempTotalAmount= TempTotalAmount + int.parse(_walletAmountcontroller.text),
+                  print(TempTotalAmount),
+                  saveData(_walletNamecontroller.text, DateTime.now(), _walletAmountcontroller.text, _walletGoalcontroller.text, TempTotalAmount),
+
                   walletCardController.addCard(
                     _walletNamecontroller.text,
-                    DateTime(
-                        DateTime.now().day,
-                        DateTime.now().month,
-                        DateTime.now().year,
-                        DateTime.now().hour,
-                        DateTime.now().minute),
+                    DateTime.now(),
                     _walletAmountcontroller.text,
                     _walletGoalcontroller.text,
                   ),
+
+
+
+
+
                   Navigator.pop(context, 'Wallet Created'),
+
 
                   displayInfoBar(context, builder: (context, close) {
                     return const InfoBar(
@@ -367,7 +416,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+
     );
-    setState(() {});
+    if(result=='Wallet Created')
+      {
+        setState(() {});
+      }
+
   }
 }

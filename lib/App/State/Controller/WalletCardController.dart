@@ -1,21 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get/get.dart';
 import 'package:projcet_merakkel/App/Ui/Widgets/WalletCard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class WalletCardController extends GetxController {
 
-  void UserWalletData()async {
 
-    // Obtain shared preferences.
-    final SharedPreferences walletData = await SharedPreferences.getInstance();
-    //store walleCards List in walletData
-    walletData.setStringList('walletCards', walletCards.map((e) => e.toString()).toList());
-    walletData.setInt('WalletCount', walletCards.length);
-
-
-  }
 
   final RxBool isCardAdded = true.obs;
 
@@ -42,6 +32,16 @@ class WalletCardController extends GetxController {
       tagetAmount: tagetAmount,
     ));
   }
+
+  //find percentage
+  double findPercentage(amount,tagetAmount){
+    double amountDouble = double.parse(amount);
+    double tagetAmountDouble = double.parse(tagetAmount);
+    double percentage = amountDouble/tagetAmountDouble;
+    return percentage;
+  }
+
+
 }
 
 
