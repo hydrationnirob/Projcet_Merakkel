@@ -1,14 +1,15 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/gestures.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:isar/isar.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
+
 import 'package:projcet_merakkel/App/Data/UserData/Local_db/local_db.dart';
+import 'package:projcet_merakkel/App/Models/UserModel.dart';
 import 'package:projcet_merakkel/App/Models/WalletModel.dart';
 import 'package:projcet_merakkel/App/State/Controller/WalletCardController.dart';
+import 'package:projcet_merakkel/App/Ui/Screens/LoginPage.dart';
 import 'package:projcet_merakkel/App/Ui/Utilities/Colors.dart';
 import 'package:projcet_merakkel/App/Ui/Widgets/WalletCard.dart';
 
@@ -40,6 +41,11 @@ void saveData(title,lastPaid,amount,tagetAmount,totalAmount) async {
 
   );
   await localdb.SaveWallet(walletModel);
+
+
+
+
+
 }
 
 
@@ -82,6 +88,8 @@ void saveData(title,lastPaid,amount,tagetAmount,totalAmount) async {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HeroCard(),
+
+
            StreamBuilder<List<WalletModel>>(
               stream: LocalDbServices().getWallets(),
               builder: (context, snapshot) {
@@ -254,7 +262,7 @@ void saveData(title,lastPaid,amount,tagetAmount,totalAmount) async {
                 child: Center(
                     child: IconButton(
                   icon: const Icon(FluentIcons.circle_addition, size: 30.0),
-                  onPressed: () => debugPrint('pressed button'),
+                  onPressed: () => Navigator.pushAndRemoveUntil(context, FluentPageRoute(builder: (context) =>  LoginPage(),), (route) => true),
                 ))),
           ),
         ),

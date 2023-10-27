@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:projcet_merakkel/App/Ui/Screens/LoginPage.dart';
 
 import 'Data/InAppData/NavigationPanalList.dart';
 import 'Ui/Screens/HomePage.dart';
@@ -10,12 +11,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: FluentThemeData(
         brightness: Brightness.light,
         accentColor: Colors.red,
       ),
-      home: const MainNav(),
+      home:  LoginPage(),
 
 
     );
@@ -38,14 +40,13 @@ class _MainNavState extends State<MainNav> {
   @override
   Widget build(BuildContext context) {
     return NavigationView(
-      appBar:  const NavigationAppBar(
-        title: Text('Fluent UI Demo'),
-
-
+      appBar:   const NavigationAppBar(
+        title: Text('Project Merakkel'),
+        automaticallyImplyLeading: false,
       ),
       pane: NavigationPane(
 
-        header: Text('Fluent UI Demo'),
+        header: Text('Project Merakkel'),
         size: const NavigationPaneSize(openWidth: 300),
         displayMode: PaneDisplayMode.compact,
         selected: topIndex,
