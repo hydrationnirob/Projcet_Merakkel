@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:projcet_merakkel/App/Ui/Screens/HomePage.dart';
+import 'package:projcet_merakkel/App/Ui/Screens/InputFild.dart';
 
 class NavigationPanalList {
  static List<NavigationPaneItem> items = [
@@ -13,21 +14,14 @@ class NavigationPanalList {
       icon: const Icon(FluentIcons.issue_tracking),
       title: const Text('Track orders'),
       infoBadge: const InfoBadge(source: Text('8')),
-      body: const ScaffoldPage(
-        header: Text('Track orders'),
-        content: Center(
-          child: Text(
-            'This is the content of the Track orders page',
-          ),
-        ),
-      ),
+      body:  InputField(),
     ),
     PaneItem(
       icon: const Icon(FluentIcons.payment_card),
       title: const Text('My Card'),
       body: const ScaffoldPage(
-        header: const Text('Track orders'),
-        content: const Center(
+        header: Text('Track orders'),
+        content: Center(
           child: Text(
             'This is the content of the Track orders page',
           ),
@@ -39,7 +33,7 @@ class NavigationPanalList {
       icon: const Icon(FluentIcons.money),
       title: const Text('Finance Chart'),
       body: const ScaffoldPage(
-        header: const Text('Track orders'),
+        header: Text('Track orders'),
         content: Center(
           child: Text(
             'This is the content of the Track orders page',

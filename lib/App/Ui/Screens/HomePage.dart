@@ -20,6 +20,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+
+
+
 class _HomePageState extends State<HomePage> {
   final TextEditingController _walletNamecontroller = TextEditingController();
   final TextEditingController _walletGoalcontroller = TextEditingController();
@@ -43,12 +46,20 @@ void saveData(title,lastPaid,amount,tagetAmount,totalAmount) async {
   await localdb.SaveWallet(walletModel);
 
 
+}
 
-
-
+Future<String> ReadUserModel() async {
+  final isar = await localdb.db;
+  final user = await isar.userModels.where().findFirst();
+  return user!.Name;
 }
 
 
+  @override
+  void initState() {
+    ReadUserModel();
+    super.initState();
+  }
 
 
   final localdb= LocalDbServices();
@@ -193,7 +204,8 @@ void saveData(title,lastPaid,amount,tagetAmount,totalAmount) async {
                 children: [
                   const Padding(
                     padding: EdgeInsets.only(left: 16, top: 5),
-                    child: Text("Hello, Nirob!",
+                    //show  Name from local db UserModel
+                    child: Text( '',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
